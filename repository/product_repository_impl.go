@@ -58,13 +58,19 @@ func (repository *ProductRepositoryImpl) FindById(ctx context.Context, tx *sql.T
 	}
 }
 
-func (repository *ProductRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx, filter map[string]string) []domain.Product {
+func (repository *ProductRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx, query map[string]string) []domain.Product {
 	SQL := "SELECT * FROM products"
-	if len(filter["category"]) != 0 {
-		SQL += " WHERE category LIKE '%" + filter["category"] +"%'"
+	if len(query["category"]) != 0 {
+		SQL += " WHERE category LIKE '%" + query["category"] +"%'"
 	}
-	if len(filter["price"]) != 0 {
-		SQL += " ORDER BY price " + filter["price"]
+	if len(query["price"]) != 0 {
+		SQL += " ORDER BY price " + query["price"]
+	}
+	if len(query["limit"]) != 0 {
+		SQL += " LIMIT " + query["limit"]
+	} 
+	if len(query["offset"]) != 0 {
+		SQL += " OFFSET " + query["offset"]
 	}
 
 	rows, err := tx.QueryContext(ctx, SQL)
@@ -79,21 +85,4 @@ func (repository *ProductRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx
 		products = append(products, product)
 	}
 	return products
-}
-
-func (repository *ProductRepositoryImpl) FindQueryByCategory(ctx context.Context, tx *sql.Tx, category string) []domain.Product {
-	SQL := "SELECT * FROM products WHERE category = ?"
-	rows, err := tx.QueryContext(ctx, SQL, category)
-	helper.PanicIfError(err)
-	defer rows.Close()
-
-	var products []domain.Product
-	for rows.Next() {
-		product := domain.Product{}
-		err := rows.Scan(&product.Id, &product.Name, &product.Description, &product.Category, &product.Price)
-		helper.PanicIfError(err)
-		products = append(products, product)
-	}
-	return products
-
 }

@@ -85,10 +85,13 @@ func (controller *ProductControllerImpl) FindById(writer http.ResponseWriter, re
 }
 
 func (controller *ProductControllerImpl) FindAll(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	filter := make(map[string]string)
-	filter["price"] = request.URL.Query().Get("price")
-	filter["category"] = request.URL.Query().Get("category")
-	productResponses := controller.ProductService.FindAll(request.Context(), filter)
+	query := make(map[string]string)
+	query["price"] = request.URL.Query().Get("price")
+	query["category"] = request.URL.Query().Get("category")
+	query["limit"] = request.URL.Query().Get("limit")
+	query["offset"] = request.URL.Query().Get("offset")
+
+	productResponses := controller.ProductService.FindAll(request.Context(), query)
 	webResponse := web.WebResponse{
 		Code:   200,
 		Status: "OK",

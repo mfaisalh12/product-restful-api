@@ -95,12 +95,12 @@ func (service *ProductServiceImpl) FindById(ctx context.Context, productId int) 
 	return helper.ToProductResponse(product)
 }
 
-func (service *ProductServiceImpl) FindAll(ctx context.Context, filter map[string]string) []web.ProductResponse {
+func (service *ProductServiceImpl) FindAll(ctx context.Context, query map[string]string) []web.ProductResponse {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	products := service.ProductRepository.FindAll(ctx, tx, filter)
+	products := service.ProductRepository.FindAll(ctx, tx, query)
 	return helper.ToAllProductResponse(products)
 }
 
