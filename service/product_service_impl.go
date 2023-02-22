@@ -7,15 +7,21 @@ import (
 	"mfaisalh12/product-restful-api/model/domain"
 	"mfaisalh12/product-restful-api/model/web"
 	"mfaisalh12/product-restful-api/repository"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type ProductServiceImpl struct {
 	ProductRepository repository.ProductRepository
-	DB                 *sql.DB
+	DB      	*sql.DB
+	Validate	*validator.Validate
 }
 
 
 func (service *ProductServiceImpl) Create(ctx context.Context, request web.ProductCreateRequest) web.ProductResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+	
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
@@ -33,6 +39,9 @@ func (service *ProductServiceImpl) Create(ctx context.Context, request web.Produ
 }
 
 func (service *ProductServiceImpl) Update(ctx context.Context, request web.ProductUpdateRequest) web.ProductResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+	
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
