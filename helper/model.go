@@ -5,14 +5,13 @@ import (
 	"mfaisalh12/product-restful-api/model/web"
 )
 
-
 func ToProductResponse(product domain.Product) web.ProductResponse {
 	return web.ProductResponse{
-		Id: product.Id,
-		Name: product.Name,
-		Description: product.Description,
-		Category: product.Category,
-		Price: product.Price,
+		Id: 					product.Id,
+		Name: 				product.Name,
+		Description:	product.Description,
+		Category:			product.Category,
+		Price:				product.Price,
 	}
 }
 

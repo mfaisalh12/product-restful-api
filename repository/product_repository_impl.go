@@ -11,6 +11,10 @@ import (
 type ProductRepositoryImpl struct {
 }
 
+func NewProductRepository() ProductRepository {
+	return &ProductRepositoryImpl{}
+}
+
 
 func (repository *ProductRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, product domain.Product) domain.Product {
 	SQL := "INSERT INTO products(name, description, category, price) VALUES(?, ?, ?, ?)"
@@ -55,7 +59,7 @@ func (repository *ProductRepositoryImpl) FindById(ctx context.Context, tx *sql.T
 }
 
 func (repository *ProductRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []domain.Product {
-	SQL := "select id, name from category"
+	SQL := "SELECT * FROM products"
 	rows, err := tx.QueryContext(ctx, SQL)
 	helper.PanicIfError(err)
 	defer rows.Close()
