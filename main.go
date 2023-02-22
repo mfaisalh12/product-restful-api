@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mfaisalh12/product-restful-api/app"
 	"mfaisalh12/product-restful-api/controller"
+	"mfaisalh12/product-restful-api/exception"
 	"mfaisalh12/product-restful-api/helper"
 	"mfaisalh12/product-restful-api/repository"
 	"mfaisalh12/product-restful-api/service"
@@ -28,6 +29,8 @@ func main() {
 	router.POST("/api/products", productController.Create)
 	router.PUT("/api/products/:productId", productController.Update)
 	router.DELETE("/api/products/:productId", productController.Delete)
+
+	router.PanicHandler = exception.ErrorHandler
 	
 	server := http.Server{
 		Addr: "localhost:3000",

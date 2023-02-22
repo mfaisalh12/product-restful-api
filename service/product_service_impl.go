@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"mfaisalh12/product-restful-api/exception"
 	"mfaisalh12/product-restful-api/helper"
 	"mfaisalh12/product-restful-api/model/domain"
 	"mfaisalh12/product-restful-api/model/web"
@@ -54,7 +55,9 @@ func (service *ProductServiceImpl) Update(ctx context.Context, request web.Produ
 	defer helper.CommitOrRollback(tx)
 
 	product, err := service.ProductRepository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	product.Name = request.Name
 	product.Description = request.Description
@@ -72,7 +75,9 @@ func (service *ProductServiceImpl) Delete(ctx context.Context, productId int) {
 	defer helper.CommitOrRollback(tx)
 
 	product, err := service.ProductRepository.FindById(ctx, tx, productId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.ProductRepository.Delete(ctx, tx, product)
 }
@@ -83,7 +88,9 @@ func (service *ProductServiceImpl) FindById(ctx context.Context, productId int) 
 	defer helper.CommitOrRollback(tx)
 
 	product, err := service.ProductRepository.FindById(ctx, tx, productId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ToProductResponse(product)
 }
