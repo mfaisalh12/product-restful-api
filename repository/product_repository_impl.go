@@ -50,7 +50,7 @@ func (repository *ProductRepositoryImpl) FindById(ctx context.Context, tx *sql.T
 		helper.PanicIfError(err)
 		return product, nil
 	} else {
-		return product, errors.New("Product is not found")
+		return product, errors.New("product is not found")
 	}
 }
 
